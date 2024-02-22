@@ -1,3 +1,4 @@
+import 'package:chat_app_fb/components/chat_bubble.dart';
 import 'package:chat_app_fb/components/my_textfields.dart';
 import 'package:chat_app_fb/services/auth/auth_service.dart';
 import 'package:chat_app_fb/services/chat/chat_service.dart';
@@ -12,15 +13,15 @@ class ChatPage extends StatelessWidget {
   final TextEditingController messagecontroller = TextEditingController();
 
   //chat and auth services
-  final ChatService chatService = ChatService();
-  final AuthService authService = AuthService();
+  final ChatService ChatServices = ChatService();
+  final AuthService AuthServices = AuthService();
 
   //send messages
   void sendMessage() async {
     //if there is something inside the textfield
     if (messagecontroller.text.isNotEmpty) {
       //send the msg
-      await chatService.sendMessage(receiverID, messagecontroller.text);
+      await ChatServices.sendMessage(receiverID, messagecontroller.text);
       //clear text controller
       messagecontroller.clear();
     }
@@ -29,8 +30,12 @@ class ChatPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
         title: Text(receiverEmail),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        foregroundColor: Colors.grey,
       ),
       body: Column(
         children: [
@@ -45,9 +50,9 @@ class ChatPage extends StatelessWidget {
 
   //build message list
   Widget buildMessagesList() {
-    String senderID = authService.getCurrentUser()!.uid;
+    String senderID = AuthServices.getCurrentUser()!.uid;
     return StreamBuilder(
-      stream: chatService.getMessages(receiverID, senderID),
+      stream: ChatServices.getMessages(receiverID, senderID),
       builder: (context, snapshot) {
         //errors
         if (snapshot.hasError) {
@@ -72,7 +77,8 @@ class ChatPage extends StatelessWidget {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
     // is current user
-    bool isCurrentUser = data["senderID "] == authService.getCurrentUser()!.uid;
+    bool isCurrentUser =
+        data["senderID "] == AuthServices.getCurrentUser()!.uid;
 
     //align msg to the right if sender is the current user,otherwise left
     var alignment =
@@ -84,26 +90,40 @@ class ChatPage extends StatelessWidget {
           crossAxisAlignment:
               isCurrentUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: [
-            Text(data["message"]),
+            ChatBubble(message: data["message"], isCurrentUser: isCurrentUser)
           ],
         ));
   }
 
   //build message input
   Widget buildUserInput() {
-    return Row(
-      children: [
-        //txtfield should take upmost of the space
-        Expanded(
-          child: MyTextFields(
-              hintText: "Type a message",
-              obscure: false,
-              controller: messagecontroller),
-        ),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 50.0),
+      child: Row(
+        children: [
+          //txtfield should take upmost of the space
+          Expanded(
+            child: MyTextFields(
+                hintText: "Type a message",
+                obscure: false,
+                controller: messagecontroller),
+          ),
 
-        //send button
-        IconButton(onPressed: sendMessage, icon: Icon(Icons.arrow_upward))
-      ],
+          //send button
+          Container(
+            decoration:
+                BoxDecoration(color: Colors.green, shape: BoxShape.circle),
+            margin: EdgeInsets.only(right: 25),
+            child: IconButton(
+              onPressed: sendMessage,
+              icon: Icon(
+                Icons.arrow_upward,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
