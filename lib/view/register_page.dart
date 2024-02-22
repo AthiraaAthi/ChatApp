@@ -1,3 +1,4 @@
+import 'package:chat_app_fb/services/auth/auth_service.dart';
 import 'package:flutter/material.dart';
 
 import '../components/my_buttons.dart';
@@ -6,14 +7,42 @@ import '../components/my_textfields.dart';
 class RegisterPage extends StatelessWidget {
   //tap for login
   final void Function()? onTap;
+
   RegisterPage({super.key, required this.onTap});
   //controllers for both email and password
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passController = TextEditingController();
   final TextEditingController confirmpassController = TextEditingController();
 
-  //register method
-  void register() {}
+  //register method --1
+  void register(BuildContext context) async {
+    //get auth service ---2
+    final authservice = AuthService();
+
+    //passwords match => create user
+    if (passController.text == confirmpassController.text) {
+      try {
+        authservice.signUpWithEmailPassword(
+            emailController.text, passController.text);
+      } catch (e) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text(e.toString()),
+          ),
+        );
+      }
+    }
+    //passwords dont match => tell user to fix
+    else {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text("Passwords don't match"),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +106,7 @@ class RegisterPage extends StatelessWidget {
 
             //login button
             MyButtons(
-              onTap: register,
+              onTap: () => register(context),
               text: "Register",
             ),
             SizedBox(

@@ -2,11 +2,11 @@ import 'package:chat_app_fb/view/login_or_register.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../view/home_page.dart';
+import '../../view/home_page.dart';
 
 class AuthGate extends StatelessWidget {
   const AuthGate({super.key});
-
+  //listening to the changes whether the user is signed in or not
   @override
   Widget build(BuildContext context) {
     return Scaffold(
