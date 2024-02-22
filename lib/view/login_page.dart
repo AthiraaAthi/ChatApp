@@ -1,3 +1,4 @@
+import 'package:chat_app_fb/auth/auth_service.dart';
 import 'package:chat_app_fb/components/my_buttons.dart';
 import 'package:chat_app_fb/components/my_textfields.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,26 @@ class LoginPage extends StatelessWidget {
   final TextEditingController passController = TextEditingController();
 
   //login method
-  void login() {}
+  void login(BuildContext context) async {
+    //auth service
+    final authService = AuthService();
+
+    //try login
+    try {
+      await authService.signInWithEmailPassword(
+          emailController.text, passController.text);
+    }
+
+    //catch any errors
+    catch (e) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(e.toString()),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +86,7 @@ class LoginPage extends StatelessWidget {
 
             //login button
             MyButtons(
-              onTap: login,
+              onTap: () => login(context),
               text: "Login",
             ),
             SizedBox(
