@@ -1,17 +1,19 @@
-import 'package:chat_app_fb/components/my_buttons.dart';
-import 'package:chat_app_fb/components/my_textfields.dart';
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatelessWidget {
-  //tap for register page
+import '../components/my_buttons.dart';
+import '../components/my_textfields.dart';
+
+class RegisterPage extends StatelessWidget {
+  //tap for login
   final void Function()? onTap;
-  LoginPage({super.key, required this.onTap});
+  RegisterPage({super.key, required this.onTap});
   //controllers for both email and password
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passController = TextEditingController();
+  final TextEditingController confirmpassController = TextEditingController();
 
-  //login method
-  void login() {}
+  //register method
+  void register() {}
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +35,7 @@ class LoginPage extends StatelessWidget {
 
             //welcome back message
             Text(
-              "Welcome Back!",
+              "Let's Create an Account",
               style: TextStyle(
                 color: Theme.of(context).colorScheme.primary,
                 fontSize: 20,
@@ -61,13 +63,22 @@ class LoginPage extends StatelessWidget {
               hintText: "Enter your Password",
             ),
             SizedBox(
+              height: 10,
+            ),
+            //confirm pass textfield
+            MyTextFields(
+              controller: confirmpassController,
+              obscure: true,
+              hintText: "Confirm Password",
+            ),
+            SizedBox(
               height: 25,
             ),
 
             //login button
             MyButtons(
-              onTap: login,
-              text: "Login",
+              onTap: register,
+              text: "Register",
             ),
             SizedBox(
               height: 25,
@@ -78,15 +89,16 @@ class LoginPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "Not a member?",
+                  "Already have an account?",
                   style:
                       TextStyle(color: Theme.of(context).colorScheme.primary),
                 ),
                 InkWell(
                   onTap: onTap,
-                  child: Text("Register now",
+                  child: Text("Login now",
                       style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary)),
+                          color: Theme.of(context).colorScheme.primary,
+                          fontWeight: FontWeight.bold)),
                 )
               ],
             )

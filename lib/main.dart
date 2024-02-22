@@ -1,7 +1,14 @@
+import 'package:chat_app_fb/firebase_options.dart';
+import 'package:chat_app_fb/themes/light_mode.dart';
+import 'package:chat_app_fb/view/login_or_register.dart';
 import 'package:chat_app_fb/view/login_page.dart';
+import 'package:chat_app_fb/view/register_page.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(MyApp());
 }
 
@@ -12,7 +19,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LoginPage(),
+      home: LoginOrRegister(),
+      theme: lightMode,
     );
   }
 }
